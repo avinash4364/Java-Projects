@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.awt.event.KeyEvent;
 
 public class Racket extends Rectangle {
     private Player id;
@@ -15,5 +16,13 @@ public class Racket extends Rectangle {
             graphics.setColor(Color.green);
         }
         graphics.fillRect(x, y, width, height);
+    }
+
+    public void keyPressed(KeyEvent event){
+
+    }
+
+    public void keyReleased(KeyEvent event) {
+
     }
 }

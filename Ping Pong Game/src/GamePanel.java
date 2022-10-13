@@ -7,7 +7,7 @@ import java.awt.event.KeyEvent;
 
 public class GamePanel extends JPanel implements ActionListener {
     private static final int SCREEN_WIDTH = 1000;
-    private static final int SCREEN_HEIGHT = 1000;
+    private static final int SCREEN_HEIGHT = (int) (SCREEN_WIDTH * 0.55); // ratio of the ping pong table is 5:9
     private static final int UNIT_SIZE = 25;
     private static final int RACKET_WIDTH = UNIT_SIZE;
     private static final int RACKET_HEIGHT = 100;
@@ -47,10 +47,10 @@ public class GamePanel extends JPanel implements ActionListener {
     private void draw(Graphics graphics) {
 
         // drawing horizontal and vertical lines
-        for (int i = 0; i < SCREEN_WIDTH / UNIT_SIZE; i++) {
+        for (int i = 0; i < SCREEN_WIDTH; i++) {
             graphics.drawLine(0, i * UNIT_SIZE, SCREEN_WIDTH, i * UNIT_SIZE);
         }
-        for (int i = 0; i < SCREEN_HEIGHT / UNIT_SIZE; i++) {
+        for (int i = 0; i < SCREEN_HEIGHT; i++) {
             graphics.drawLine(i * UNIT_SIZE, 0, i * UNIT_SIZE, SCREEN_HEIGHT);
         }
 
@@ -67,15 +67,17 @@ public class GamePanel extends JPanel implements ActionListener {
 
     }
 
-    private static class MyKeyAdapter extends KeyAdapter {
+    private class MyKeyAdapter extends KeyAdapter {
         @Override
         public void keyPressed(KeyEvent e) {
-
+            leftRacket.keyPressed(e);
+            rightRacket.keyPressed(e);
         }
 
         @Override
         public void keyReleased(KeyEvent e) {
-
+            leftRacket.keyReleased(e);
+            rightRacket.keyPressed(e);
         }
     }
 }
