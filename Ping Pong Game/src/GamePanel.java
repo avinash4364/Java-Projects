@@ -1,7 +1,11 @@
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
 
 public class GamePanel extends JPanel implements Runnable {
     private static final int SCREEN_WIDTH = 1200;
@@ -15,6 +19,8 @@ public class GamePanel extends JPanel implements Runnable {
     private Ball ball;
     private final Score score;
 
+    private static final String location1 = "ping_pong.wav";
+    private static final String location2 = "Swoosh sound.wav";
 
     public GamePanel() {
         newRacket();
@@ -91,14 +97,28 @@ public class GamePanel extends JPanel implements Runnable {
         // check if the ball collides with the racket
         // if the ball collides with left racket
         if (leftRacket.intersects(ball)) {
-            ball.setXVelocity(Math.abs(ball.getXVelocity()));
+            playHitSound();
+            ball.setXVelocity(Math.abs(ball.getXVelocity()) + 1); // as the ball hits the racket its speed increases
+            // optional if-else
+            if (ball.getYVelocity() > 0) {
+                ball.setYVelocity(ball.getYVelocity() + 1); // speed increases in the y direction - optional
+            } else {
+                ball.setYVelocity(ball.getYVelocity() - 1);
+            }
             ball.setXDirection(ball.getXVelocity());
             ball.setYDirection(ball.getYVelocity());
         }
 
         // if the ball collides with the right racket
         else if (rightRacket.intersects(ball)) {
-            ball.setXVelocity(Math.abs(ball.getXVelocity()));
+            playHitSound();
+            ball.setXVelocity(Math.abs(ball.getXVelocity()) + 1);
+            // optional if-else
+            if (ball.getYVelocity() > 0) {
+                ball.setYVelocity(ball.getYVelocity() + 1); // speed increases in the y direction - optional
+            } else {
+                ball.setYVelocity(ball.getYVelocity() - 1);
+            }
             ball.setXDirection(-ball.getXVelocity());
             ball.setYDirection(ball.getYVelocity());
         }
@@ -107,12 +127,14 @@ public class GamePanel extends JPanel implements Runnable {
         // edges
         if (ball.x <= 0) { // player one missed and player two scored
             score.setPlayerTwoScore(score.getPlayerTwoScore() + 1);
+            playMissSound();
             newRacket(); // we need to create a new racket and ball otherwise the score will keep on increasing once
             // it hits
             newBall();
         }
         if (ball.x >= (SCREEN_WIDTH - BALL_DIAMETER)) { // player two missed and player one scored
             score.setPlayerOneScore(score.getPlayerOneScore() + 1);
+            playMissSound();
             newRacket();
             newBall();
         }
@@ -156,6 +178,38 @@ public class GamePanel extends JPanel implements Runnable {
         public void keyReleased(KeyEvent e) {
             leftRacket.keyReleased(e);
             rightRacket.keyReleased(e);
+        }
+    }
+
+    private void playSound(File file) {
+        try {
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            clip.start();
+        } catch (Exception e) {
+            System.out.println("Unable to play audio");
+            e.printStackTrace();
+        }
+    }
+
+    private void playHitSound() {
+        try { // play the audio of hitting the racket
+            File hitSound = new File(location1);
+            playSound(hitSound);
+        } catch (Exception e) {
+            System.out.println("Audio file not found or it is damaged");
+            e.printStackTrace();
+        }
+    }
+
+    private void playMissSound() {
+        try { // play the audio of missing the ball
+            File missSound = new File(location2);
+            playSound(missSound);
+        } catch (Exception e) {
+            System.out.println("Audio file not found or it is damaged");
+            e.printStackTrace();
         }
     }
 }
