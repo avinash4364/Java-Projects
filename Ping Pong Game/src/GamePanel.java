@@ -1,15 +1,38 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
-public class GamePanel extends JPanel {
+public class GamePanel extends JPanel implements ActionListener {
     private static final int SCREEN_WIDTH = 1000;
     private static final int SCREEN_HEIGHT = 1000;
     private static final int UNIT_SIZE = 25;
+    private static final int RACKET_WIDTH = UNIT_SIZE;
+    private static final int RACKET_HEIGHT = 100;
+
+    private Racket leftRacket;
+    private Racket rightRacket;
 
     public GamePanel() {
+        newRacket();
+        newBall();
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
         this.setBackground(Color.black);
         this.setFocusable(true);
+        this.addKeyListener(new MyKeyAdapter());
+    }
+
+    private void newBall() {
+
+    }
+
+    private void newRacket() {
+        leftRacket = new Racket(0, (SCREEN_HEIGHT - RACKET_HEIGHT) / 2, RACKET_WIDTH,
+                RACKET_HEIGHT, Player.FIRST);
+        rightRacket = new Racket((SCREEN_WIDTH - RACKET_WIDTH), (SCREEN_HEIGHT - RACKET_HEIGHT) / 2, RACKET_WIDTH,
+                RACKET_HEIGHT, Player.SECOND);
     }
 
     @Override
@@ -24,9 +47,29 @@ public class GamePanel extends JPanel {
         for (int i = 0; i < SCREEN_WIDTH / UNIT_SIZE; i++) {
             graphics.drawLine(0, i * UNIT_SIZE, SCREEN_WIDTH, i * UNIT_SIZE);
         }
-
         for (int i = 0; i < SCREEN_HEIGHT / UNIT_SIZE; i++) {
             graphics.drawLine(i * UNIT_SIZE, 0, i * UNIT_SIZE, SCREEN_HEIGHT);
+        }
+
+        // drawing left and right racket
+        leftRacket.draw(graphics);
+        rightRacket.draw(graphics);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+    }
+
+    private static class MyKeyAdapter extends KeyAdapter {
+        @Override
+        public void keyPressed(KeyEvent e) {
+
+        }
+
+        @Override
+        public void keyReleased(KeyEvent e) {
+
         }
     }
 }
