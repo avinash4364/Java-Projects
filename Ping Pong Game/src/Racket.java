@@ -18,6 +18,10 @@ public class Racket extends Rectangle {
         graphics.fillRect(x, y, width, height);
     }
 
+    public void move(){
+
+    }
+
     public void keyPressed(KeyEvent event){
 
     }
