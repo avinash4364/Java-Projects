@@ -5,8 +5,8 @@ public class GameFrame extends JFrame { // a frame acts as boundary around our g
     // and maximize button.
     public GameFrame() throws HeadlessException {
         this.add(new GamePanel());
-        this.setBackground(Color.black);
         this.setResizable(false); // remove the maximize button
+        this.setTitle("snake");
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.pack();
         this.setVisible(true);
