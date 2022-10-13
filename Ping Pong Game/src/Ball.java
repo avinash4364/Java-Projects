@@ -5,4 +5,8 @@ public class Ball extends Rectangle {
         super(x, y, width, height);
     }
 
+    public void draw(Graphics graphics) {
+        graphics.setColor(Color.blue);
+        graphics.fillOval(x, y, width, height);
+    }
 }

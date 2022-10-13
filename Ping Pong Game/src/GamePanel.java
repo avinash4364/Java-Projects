@@ -11,9 +11,12 @@ public class GamePanel extends JPanel implements ActionListener {
     private static final int UNIT_SIZE = 25;
     private static final int RACKET_WIDTH = UNIT_SIZE;
     private static final int RACKET_HEIGHT = 100;
+    private static final int BALL_DIAMETER = UNIT_SIZE;
 
     private Racket leftRacket;
     private Racket rightRacket;
+    private Ball ball;
+
 
     public GamePanel() {
         newRacket();
@@ -25,7 +28,7 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     private void newBall() {
-
+        ball = new Ball(0, 0, BALL_DIAMETER, BALL_DIAMETER);
     }
 
     private void newRacket() {
@@ -54,6 +57,9 @@ public class GamePanel extends JPanel implements ActionListener {
         // drawing left and right racket
         leftRacket.draw(graphics);
         rightRacket.draw(graphics);
+
+        // drawing a ball
+        ball.draw(graphics);
     }
 
     @Override
