@@ -91,6 +91,21 @@ public class GamePanel extends JPanel implements Runnable {
         if (ball.y <= 0 || ball.y >= (SCREEN_HEIGHT - BALL_DIAMETER)) {
             ball.y = -ball.getYVelocity(); // reversing the movement of the ball
         }
+
+        // check if the ball collides with the racket
+        // if the ball collides with left racket
+        if (leftRacket.intersects(ball)){
+
+        }
+
+        // if the ball collides with the right racket
+        if (rightRacket.intersects(ball)){
+
+        }
+
+        // a player gets a point if his opponent misses the ping pong - meaning the ball passes through the vertical
+        // edges
+
     }
 
     @Override
@@ -112,7 +127,7 @@ public class GamePanel extends JPanel implements Runnable {
             if (delta >= 1) {
                 move();
                 checkCollision();
-                repaint(); // repaint this component by calling the paint method of this component
+                repaint();
                 delta--;
             }
         }
