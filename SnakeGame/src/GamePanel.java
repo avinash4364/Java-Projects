@@ -1,9 +1,13 @@
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.util.Random;
 
 public class GamePanel extends JPanel implements ActionListener {
@@ -28,6 +32,9 @@ public class GamePanel extends JPanel implements ActionListener {
 
     private static Timer timer;
     private static final int DELAY = 100; // time interval in which two action events occurs (in milliseconds)
+
+    private static final String audioFilePath = "snake_eating.wav";
+    private Clip clip; // class for processing audio
 
     public GamePanel() {
         applePosition = new Random();
@@ -109,6 +116,18 @@ public class GamePanel extends JPanel implements ActionListener {
             // apple should be same for it to be eaten
             snakeLength++; // increase the length of the snake as soon he eats the apple
             score++;
+
+            // as soon the snake eat the apple make an eating sound
+            try {
+                File audioFile = new File(audioFilePath);
+                AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioFile);
+                clip = AudioSystem.getClip();
+                clip.open(audioInputStream);
+                clip.start();
+            } catch (Exception e) {
+                System.out.println("Not able to play audio");
+                e.printStackTrace();
+            }
             newApple();
         }
     }
@@ -148,6 +167,10 @@ public class GamePanel extends JPanel implements ActionListener {
         // and vertically
         g.drawString("Game over", (SCREEN_WIDTH - metrics2.stringWidth("Game Over")) / 2, SCREEN_HEIGHT / 2);
 
+        // close the resource consumed by the clip(playing audio)
+        if (this.clip != null) {
+            clip.close();
+        }
     }
 
     @Override
@@ -162,7 +185,7 @@ public class GamePanel extends JPanel implements ActionListener {
         repaint(); // this will call the paintComponent() method again and again
     }
 
-    private class MyKeyAdapter extends KeyAdapter { // inner class which will be used when we press the arrow keys to
+    private static class MyKeyAdapter extends KeyAdapter { // inner class which will be used when we press the arrow keys to
         // change the direction of our snake
         @Override
         public void keyPressed(KeyEvent e) {
