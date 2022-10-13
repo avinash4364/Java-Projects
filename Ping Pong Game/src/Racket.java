@@ -2,7 +2,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public class Racket extends Rectangle {
-    private Player id;
+    private final Player id;
     private int speed; // speed at which the racket will move (it could be at DISTANCE or -DISTANCE pixels at a time)
     private final int DISTANCE = 10; // fixed distance - amount of distance the racket will move up and down when
     // pressing arrow keys
@@ -25,7 +25,8 @@ public class Racket extends Rectangle {
         y += speed;
     }
 
-    public void setSpeed(int speed) {
+    public void setSpeed(int speed) { // this will set the speed to positive or negative values and move the racket
+        // up or down
         this.speed = speed;
     }
 

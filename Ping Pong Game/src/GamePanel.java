@@ -95,11 +95,10 @@ public class GamePanel extends JPanel implements Runnable {
         // check if the ball collides with the racket
         // if the ball collides with left racket
         if (leftRacket.intersects(ball)){
-
         }
 
         // if the ball collides with the right racket
-        if (rightRacket.intersects(ball)){
+        else if (rightRacket.intersects(ball)){
 
         }
 
@@ -144,7 +143,7 @@ public class GamePanel extends JPanel implements Runnable {
         @Override
         public void keyReleased(KeyEvent e) {
             leftRacket.keyReleased(e);
-            rightRacket.keyPressed(e);
+            rightRacket.keyReleased(e);
         }
     }
 }
