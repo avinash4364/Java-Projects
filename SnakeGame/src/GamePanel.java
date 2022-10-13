@@ -26,6 +26,7 @@ public class GamePanel extends JPanel implements ActionListener {
     private boolean isMoving = false; // initially the snake is not moving
     private static char direction = 'R'; // initial direction of the snake
 
+    private static Timer timer;
     private static final int DELAY = 100; // time interval in which two action events occurs (in milliseconds)
 
     public GamePanel() {
@@ -44,7 +45,7 @@ public class GamePanel extends JPanel implements ActionListener {
 
         // without the timer the actionPerformed method won't be called again and again which will cause our game to be
         // static - meaning we won't be able to move snake as we need to draw the screen repeatedly in order to do that
-        Timer timer = new Timer(DELAY, this); // fires action event at specified interval
+        timer = new Timer(DELAY, this); // fires action event at specified interval
         timer.start(); // starts the timer to send action events to the listeners
     }
 
@@ -104,9 +105,25 @@ public class GamePanel extends JPanel implements ActionListener {
 
     private void checkCollision() { // check collision of the snake with the walls and itself
 
+        // if the snake collides with itself
+        for (int i = snakeLength; i > 0; i--) {
+            if (snakeXPosition[i] == snakeXPosition[0] && snakeYPosition[i] == snakeYPosition[0]) {
+                isMoving = false;
+                break;
+            }
+        }
+
+        // if the snake collides with the wall
+        if (snakeXPosition[0] < 0 || snakeXPosition[0] > SCREEN_WIDTH || snakeYPosition[0] < 0 || snakeYPosition[0] > SCREEN_HEIGHT) {
+            isMoving = false;
+        }
+        if (!isMoving) { // if the snake is not moving then stop the timer
+            timer.stop();
+        }
     }
 
-    private void gameOver() { // method to display the score at the end of the match
+    private void gameOver(Graphics graphics) { // method to display the score at the end of the match
+
 
     }
 
