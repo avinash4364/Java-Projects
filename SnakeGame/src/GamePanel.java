@@ -73,10 +73,16 @@ public class GamePanel extends JPanel implements ActionListener {
             for (int i = 0; i < snakeLength; i++) {
                 graphics.fillOval(snakeXPosition[i], snakeYPosition[i], UNIT_SIZE, UNIT_SIZE);
             }
+
+            // this will be used to display the current score on the screen
+            graphics.setColor(Color.red);
+            graphics.setFont(new Font("Ubuntu Mono", Font.BOLD, 40));
+            FontMetrics metrics = getFontMetrics(graphics.getFont());
+            graphics.drawString("Score : " + score,
+                    (SCREEN_WIDTH - metrics.stringWidth("Score : " + score)) / 2, graphics.getFont().getSize());
         } else {
             gameOver(graphics);
         }
-
     }
 
     private void newApple() { // method to create random coordinates for the apple
