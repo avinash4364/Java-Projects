@@ -9,6 +9,8 @@ public class Score extends Rectangle {
     public Score(int width, int height) {
         Score.WIDTH = width;
         Score.HEIGHT = height;
+        this.playerOneScore = 0;
+        this.playerTwoScore = 0;
     }
 
     public int getPlayerOneScore() {

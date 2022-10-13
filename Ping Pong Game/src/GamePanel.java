@@ -4,23 +4,23 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class GamePanel extends JPanel implements Runnable {
-    private static final int SCREEN_WIDTH = 1000;
+    private static final int SCREEN_WIDTH = 1200;
     private static final int SCREEN_HEIGHT = (int) (SCREEN_WIDTH * 0.55); // ratio of the ping pong table is 5:9
-    private static final int UNIT_SIZE = 25;
-    private static final int RACKET_WIDTH = UNIT_SIZE;
+    private static final int RACKET_WIDTH = 25;
     private static final int RACKET_HEIGHT = 100;
-    private static final int BALL_DIAMETER = UNIT_SIZE;
+    private static final int BALL_DIAMETER = 25;
 
     private Racket leftRacket;
     private Racket rightRacket;
     private Ball ball;
+    private final Score score;
 
 
     public GamePanel() {
         newRacket();
         newBall();
+        score = new Score(SCREEN_WIDTH, SCREEN_HEIGHT);
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
-        this.setBackground(Color.black);
         this.setFocusable(true);
         this.addKeyListener(new MyKeyAdapter());
         Thread gameThread = new Thread(this); // here target is object whose run method will be invoked when the
@@ -29,7 +29,8 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     private void newBall() {
-        ball = new Ball(0, 0, BALL_DIAMETER, BALL_DIAMETER);
+        ball = new Ball((SCREEN_WIDTH - BALL_DIAMETER) / 2, (SCREEN_HEIGHT / BALL_DIAMETER) / 2, BALL_DIAMETER,
+                BALL_DIAMETER); // starting the ball from the center of the screen
     }
 
     private void newRacket() {
@@ -40,27 +41,23 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        draw(g);
+    public void paint(Graphics g) {
+        Image image = createImage(SCREEN_WIDTH, SCREEN_HEIGHT); // drawing the image again and again rather than
+        // drawing background - much smoother
+        draw(image.getGraphics()); // getting the graphics of the image created and passing it to draw method
+        g.drawImage(image, 0, 0, this); // then drawing the final image
     }
 
     private void draw(Graphics graphics) {
-
-        // drawing horizontal and vertical lines
-        for (int i = 0; i < SCREEN_WIDTH; i++) {
-            graphics.drawLine(0, i * UNIT_SIZE, SCREEN_WIDTH, i * UNIT_SIZE);
-        }
-        for (int i = 0; i < SCREEN_HEIGHT; i++) {
-            graphics.drawLine(i * UNIT_SIZE, 0, i * UNIT_SIZE, SCREEN_HEIGHT);
-        }
-
         // drawing left and right racket
         leftRacket.draw(graphics);
         rightRacket.draw(graphics);
 
         // drawing a ball
         ball.draw(graphics);
+
+        // drawing the score
+        score.draw(graphics);
     }
 
     private void move() { // as this method is called in the run method and to make our rackets move much smother we
@@ -71,7 +68,6 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     private void checkCollision() {
-
         // stops the racket from colliding vertically on the window edges
         if (leftRacket.y <= 0) {
             leftRacket.y = 0;
@@ -89,21 +85,37 @@ public class GamePanel extends JPanel implements Runnable {
         // stops the ball from colliding on the horizontal window edges - we want the ball to bounce off the
         // horizontal window edges and pass off from the vertical edges
         if (ball.y <= 0 || ball.y >= (SCREEN_HEIGHT - BALL_DIAMETER)) {
-            ball.y = -ball.getYVelocity(); // reversing the movement of the ball
+            ball.setYDirection(-ball.getYVelocity()); // reversing the movement of the ball
         }
 
         // check if the ball collides with the racket
         // if the ball collides with left racket
-        if (leftRacket.intersects(ball)){
+        if (leftRacket.intersects(ball)) {
+            ball.setXVelocity(Math.abs(ball.getXVelocity()));
+            ball.setXDirection(ball.getXVelocity());
+            ball.setYDirection(ball.getYVelocity());
         }
 
         // if the ball collides with the right racket
-        else if (rightRacket.intersects(ball)){
-
+        else if (rightRacket.intersects(ball)) {
+            ball.setXVelocity(Math.abs(ball.getXVelocity()));
+            ball.setXDirection(-ball.getXVelocity());
+            ball.setYDirection(ball.getYVelocity());
         }
 
-        // a player gets a point if his opponent misses the ping pong - meaning the ball passes through the vertical
+        // a player gets a score if his opponent misses the ping pong - meaning the ball passes through the vertical
         // edges
+        if (ball.x <= 0) { // player one missed and player two scored
+            score.setPlayerTwoScore(score.getPlayerTwoScore() + 1);
+            newRacket(); // we need to create a new racket and ball otherwise the score will keep on increasing once
+            // it hits
+            newBall();
+        }
+        if (ball.x >= (SCREEN_WIDTH - BALL_DIAMETER)) { // player two missed and player one scored
+            score.setPlayerOneScore(score.getPlayerOneScore() + 1);
+            newRacket();
+            newBall();
+        }
 
     }
 

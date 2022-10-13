@@ -4,8 +4,6 @@ import java.awt.event.KeyEvent;
 public class Racket extends Rectangle {
     private final Player id;
     private int speed; // speed at which the racket will move (it could be at DISTANCE or -DISTANCE pixels at a time)
-    private final int DISTANCE = 10; // fixed distance - amount of distance the racket will move up and down when
-    // pressing arrow keys
 
     public Racket(int x, int y, int width, int height, Player id) {
         super(x, y, width, height);
@@ -31,6 +29,9 @@ public class Racket extends Rectangle {
     }
 
     public void keyPressed(KeyEvent event) { // when user presses the key we want to move the racket
+        int DISTANCE = 10; // fixed distance - amount of distance the racket will move up and down when
+        // pressing arrow keys
+        
         switch (this.id) {
             case FIRST -> {
                 if (event.getKeyCode() == KeyEvent.VK_W) { // when the first player presses the W keyword then move up
